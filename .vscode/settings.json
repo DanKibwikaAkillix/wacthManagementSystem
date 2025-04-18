@@ -1,0 +1,14 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "dependencies/mysql-connector-j-9.2.0.jar",
+        "dependencies/jBCrypt-0.4-javadoc.jar"
+    ],
+    "cSpell.words": [
+        "gensalt",
+        "hashpw",
+        "jdbc",
+        "runing",
+        "Segoe"
+    ]
+}
