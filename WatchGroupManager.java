@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
@@ -10,7 +9,7 @@ public class WatchGroupManager extends JFrame {
 
     private JTable table;
     private DefaultTableModel model;
-    private JButton btnAdd, btnEdit, btnDelete;
+    private JButton btnEdit, btnDelete;
 
     private final String DB_URL = "jdbc:mysql://localhost:3306/neighborhood_watch";
     private final String USER = "root";
@@ -22,16 +21,16 @@ public class WatchGroupManager extends JFrame {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        model = new DefaultTableModel(new String[]{"ID", "Event ID", "Organizer ID", "Title", "Description", "Event Date", "Location"}, 0);
+        model = new DefaultTableModel(
+            new String[]{"ID", "Event ID", "Organizer ID", "Title", "Description", "Event Date", "Location"}, 0
+        );
         table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
 
         JPanel btnPanel = new JPanel();
-        btnAdd = new JButton("Add Group");
         btnEdit = new JButton("Edit Group");
         btnDelete = new JButton("Delete Group");
 
-        btnPanel.add(btnAdd);
         btnPanel.add(btnEdit);
         btnPanel.add(btnDelete);
 
@@ -40,7 +39,6 @@ public class WatchGroupManager extends JFrame {
 
         loadGroups();
 
-        btnAdd.addActionListener(e -> addGroup());
         btnEdit.addActionListener(e -> editGroup());
         btnDelete.addActionListener(e -> deleteGroup());
     }
@@ -67,13 +65,6 @@ public class WatchGroupManager extends JFrame {
         }
     }
 
-    private void addGroup() {
-        GroupForm form = new GroupForm();
-        form.setVisible(true);
-        loadGroups();
-    }
-
-    @SuppressWarnings("unused")
     private void editGroup() {
         int selected = table.getSelectedRow();
         if (selected == -1) {
@@ -82,8 +73,17 @@ public class WatchGroupManager extends JFrame {
         }
 
         int id = (int) model.getValueAt(selected, 0);
-        GroupForm form = new GroupForm();
+        int eventId = (int) model.getValueAt(selected, 1);
+        int organizerId = (int) model.getValueAt(selected, 2);
+        String title = (String) model.getValueAt(selected, 3);
+        String description = (String) model.getValueAt(selected, 4);
+        Timestamp eventDate = (Timestamp) model.getValueAt(selected, 5);
+        String location = (String) model.getValueAt(selected, 6);
+
+        GroupForm form = new GroupForm(id, eventId, organizerId, title, description, eventDate, location);
         form.setVisible(true);
+
+        // Refresh the table after editing
         loadGroups();
     }
 
@@ -108,5 +108,9 @@ public class WatchGroupManager extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error deleting group: " + e.getMessage());
             }
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new WatchGroupManager().setVisible(true));
     }
 }

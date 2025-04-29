@@ -136,17 +136,17 @@ public class AdminDashboard extends JFrame {
         loadEvents();
     }
 
-    private void loadEvents() {
+    public void loadEvents() {
         final String DB_URL = "jdbc:mysql://localhost:3306/neighborhood_watch";
         final String USER = "root";
         final String PASS = "";
-
+    
         String query = "SELECT eventId, title, description, eventDate, location FROM events";
-
+    
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-
+    
             tableModel.setRowCount(0);
             while (rs.next()) {
                 int id = rs.getInt("eventId");
@@ -155,10 +155,10 @@ public class AdminDashboard extends JFrame {
                 Timestamp date = rs.getTimestamp("eventDate");
                 String location = rs.getString("location");
                 JPanel actionPanel = createActionButtons(id);
-
+    
                 tableModel.addRow(new Object[]{id, title, description, date, location, actionPanel});
             }
-
+    
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
@@ -166,7 +166,7 @@ public class AdminDashboard extends JFrame {
                     "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     private void filterTable(String query) {
         if (query.trim().isEmpty()) {
             rowSorter.setRowFilter(null);
